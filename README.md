@@ -1,1 +1,1 @@
-**wip** : app coming soon...stay tuned!
+app coming soon...stay tuned!

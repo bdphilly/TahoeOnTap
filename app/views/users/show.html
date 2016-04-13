@@ -1,5 +1,31 @@
 {% extends '../layouts/default.html' %}
 
 {% block main %}
-  <h1>{{ user.name || user.username }}</h1>
+  <h2>{{ user.name || user.username }}</h2>
+  <h4>{{ user.email }}</h4>
+  <h4>{{ user.id }}</h4>
+  <h4>Admin? {{ user.isAdmin }}</h4>
+<!--   <a href="{{ '/articles/' + article._id + '/edit' }}" title="edit" class="btn btn-default">
+    Edit
+  </a>
+ -->
+<!--   <form action="{{ '/articles/' + article.id }}" method="post" onsubmit="return confirm('Are you sure?')">
+    <br>
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+    <a href="{{ '/articles/' + article._id + '/edit' }}" title="edit" class="btn btn-default">
+      Edit
+    </a>
+    &nbsp;
+    <input type="hidden" name="_method" value="DELETE">
+    <button class="btn btn-danger" type="submit">Delete</button>
+  </form> -->
+
+  <form method="post" action="{{ '/users/' + user.id + '/admin-toggle' }}" class="form-horizontal">
+    <input type="hidden" name="_method" value="PUT">
+    <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+
+    <input class="btn btn-warning" type="submit" value="Toggle Admin">
+  </form>
+
+
 {% endblock %}

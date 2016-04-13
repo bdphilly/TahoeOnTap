@@ -100,3 +100,36 @@ function login (req, res) {
   delete req.session.returnTo;
   res.redirect(redirectTo);
 }
+
+/**
+ * List
+ */
+
+exports.index = wrap(function* (req, res) {
+
+  const users = yield User.list();
+
+  res.render('users/index', {
+    title: 'Users',
+    users: users
+  });
+});
+
+/**
+ * Update user / toggle isAdmin
+ */
+
+exports.adminToggle = wrap(function* (req, res){
+  const userId = req.params.userId;
+
+  console.log('id:', userId);
+  
+  const userToUpdate = yield User.findById(userId);
+
+  console.log('userToUpdate', userToUpdate);
+  console.log('admin??', userToUpdate.isAdmin);
+
+  yield User.update(userToUpdate, { 'isAdmin': !userToUpdate.isAdmin });
+  
+  res.redirect('/users');
+});

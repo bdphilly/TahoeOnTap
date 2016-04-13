@@ -21,6 +21,7 @@ const UserSchema = new Schema({
   email: { type: String, default: '' },
   username: { type: String, default: '' },
   provider: { type: String, default: '' },
+  isAdmin: { type: Boolean, default: false },
   hashed_password: { type: String, default: '' },
   salt: { type: String, default: '' },
   authToken: { type: String, default: '' },
@@ -152,7 +153,20 @@ UserSchema.methods = {
 
   skipValidation: function () {
     return ~oAuthTypes.indexOf(this.provider);
-  }
+  },
+
+  // /**
+  //  * Save article and upload image
+  //  *
+  //  * @param {Object} images
+  //  * @api private
+  //  */
+
+  // uploadAndSave: function (images) {
+  //   const err = this.validateSync();
+  //   if (err && err.toString()) throw new Error(err.toString());
+  //   return this.save();  
+  // }
 };
 
 /**
@@ -174,7 +188,18 @@ UserSchema.statics = {
     return this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);
-  }
+  },
+
+  /**
+   * List users
+   *
+   * @param {Object} options
+   * @api private
+   */
+
+  list: function () {
+    return this.find({});
+  }  
 };
 
 mongoose.model('User', UserSchema);

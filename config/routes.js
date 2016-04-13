@@ -29,8 +29,10 @@ module.exports = function (app, passport) {
   // user routes
   app.get('/login', users.login);
   app.get('/signup', users.signup);
+  app.get('/users', users.index);
   app.get('/logout', users.logout);
   app.post('/users', users.create);
+  app.put('/users/:userId/admin-toggle', users.adminToggle);
   app.post('/users/session',
     passport.authenticate('local', {
       failureRedirect: '/login',
