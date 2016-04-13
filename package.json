@@ -1,6 +1,6 @@
 {
-  "name": "nodejs-express-mongoose-demo",
-  "description": "A demo app illustrating the usage of express, mongoose, passportjs, swig and other modules in nodejs",
+  "name": "tahoe-on-tap",
+  "description": "TahoeOnTap",
   "keywords": [
     "express",
     "mongoose",
@@ -10,10 +10,10 @@
   ],
   "version": "4.0.0",
   "private": false,
-  "author": "Madhusudhan Srinivasa <madhums8@gmail.com> (http://madhums.github.com)",
+  "author": "Bryan Phillips",
   "repository": {
     "type": "git",
-    "url": "https://github.com/madhums/node-express-mongoose-demo.git"
+    "url": "https://github.com/bdphilly/TahoeOnTap.git"
   },
   "engines": {
     "node": ">=5.x"
@@ -43,12 +43,8 @@
     "object-assign": "~4.0.1",
     "only": "0.0.2",
     "passport": "~0.3.2",
-    "passport-facebook": "~2.0.0",
-    "passport-github": "~1.0.0",
     "passport-google-oauth": "~0.2.0",
-    "passport-linkedin": "~1.0.0",
     "passport-local": "~1.0.0",
-    "passport-twitter": "~1.0.3",
     "swig": "~1.4.2",
     "view-helpers": "~0.1.5",
     "winston": "~2.1.1"
