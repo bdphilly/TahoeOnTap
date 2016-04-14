@@ -155,18 +155,18 @@ UserSchema.methods = {
     return ~oAuthTypes.indexOf(this.provider);
   },
 
-  // /**
-  //  * Save article and upload image
-  //  *
-  //  * @param {Object} images
-  //  * @api private
-  //  */
+  /**
+   * Ensure user is admin
+   *
+   * @return {Boolean}
+   * @api public
+   */
 
-  // uploadAndSave: function (images) {
-  //   const err = this.validateSync();
-  //   if (err && err.toString()) throw new Error(err.toString());
-  //   return this.save();  
-  // }
+  ensureAdmin: function (images) {
+    const err = this.validateSync();
+    if (err && err.toString()) throw new Error(err.toString());
+    return this.save();  
+  }
 };
 
 /**
@@ -184,7 +184,7 @@ UserSchema.statics = {
    */
 
   load: function (options, cb) {
-    options.select = options.select || 'name username';
+    options.select = options.select || 'name username isAdmin';
     return this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);

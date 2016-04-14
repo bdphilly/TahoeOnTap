@@ -32,7 +32,7 @@ module.exports = function (app, passport) {
   app.get('/users', users.index);
   app.get('/logout', users.logout);
   app.post('/users', users.create);
-  app.put('/users/:userId/admin-toggle', users.adminToggle);
+  app.put('/users/:userId/admin-toggle', auth.requiresLogin, auth.user.ensureAdmin, users.adminToggle);
   app.post('/users/session',
     passport.authenticate('local', {
       failureRedirect: '/login',
