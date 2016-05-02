@@ -47,7 +47,7 @@ exports.index = wrap(function* (req, res) {
  * New article
  */
 
-exports.new = function (req, res){
+exports.new = function (req, res) {
   res.render('articles/new', {
     title: 'New Article',
     article: new Article({})
@@ -60,13 +60,15 @@ exports.new = function (req, res){
  */
 
 exports.create = wrap(function* (req, res) {
+  console.log('req files: ', req.files);
+  console.log('req image: ', req.files.image);
   const article = new Article(only(req.body, 'title body tags'));
   const images = req.files.image
     ? [req.files.image]
     : undefined;
 
   article.user = req.user;
-  yield article.uploadAndSave(images);
+  yield article.uploadAndSave(req.files);
   req.flash('success', 'Successfully created article!');
   res.redirect('/articles/' + article._id);
 });

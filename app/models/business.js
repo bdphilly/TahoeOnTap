@@ -17,10 +17,10 @@ const getTags = tags => tags.join(',');
 const setTags = tags => tags.split(',');
 
 /**
- * Article Schema
+ * Business Schema
  */
 
-const ArticleSchema = new Schema({
+const BusinessSchema = new Schema({
   title: { type : String, default : '', trim : true },
   body: { type : String, default : '', trim : true },
   user: { type : Schema.ObjectId, ref : 'User' },
@@ -41,21 +41,21 @@ const ArticleSchema = new Schema({
  * Validations
  */
 
-ArticleSchema.path('title').required(true, 'Article title cannot be blank');
-ArticleSchema.path('body').required(true, 'Article body cannot be blank');
+BusinessSchema.path('title').required(true, 'Business title cannot be blank');
+BusinessSchema.path('body').required(true, 'Business body cannot be blank');
 
 /**
  * Pre-remove hook
  */
 
-ArticleSchema.pre('remove', function (next) {
+BusinessSchema.pre('remove', function (next) {
   // const imager = new Imager(imagerConfig, 'S3');
   // const files = this.image.files;
 
   // if there are files associated with the item, remove from the cloud too
   // imager.remove(files, function (err) {
   //   if (err) return next(err);
-  // }, 'article');
+  // }, 'business');
 
   next();
 });
@@ -64,33 +64,32 @@ ArticleSchema.pre('remove', function (next) {
  * Methods
  */
 
-ArticleSchema.methods = {
+BusinessSchema.methods = {
 
   /**
-   * Save article and upload image
+   * Save business and upload image
    *
    * @param {Object} images
    * @api private
    */
 
   uploadAndSave: function (images) {
-    // console.log('images: ', images);
     const err = this.validateSync();
     if (err && err.toString()) throw new Error(err.toString());
     return this.save();
 
-    // console.log('images length', images.length);
-    // if (images && !images.length) return this.save();
-    // const imager = new Imager(imagerConfig, 'S3');
-    // console.log('in the imager', imager);
-    // imager.upload(images, function (err, cdnUri, files) {
-    //   if (err) return cb(err);
-    //   if (files.length) {
-    //     self.image = { cdnUri : cdnUri, files : files };
-    //   }
-    //   self.save(cb);
-    // }, 'article');
-    
+    /*
+    if (images && !images.length) return this.save();
+    const imager = new Imager(imagerConfig, 'S3');
+
+    imager.upload(images, function (err, cdnUri, files) {
+      if (err) return cb(err);
+      if (files.length) {
+        self.image = { cdnUri : cdnUri, files : files };
+      }
+      self.save(cb);
+    }, 'business');
+    */
   },
 
   /**
@@ -110,7 +109,7 @@ ArticleSchema.methods = {
     if (!this.user.email) this.user.email = 'email@product.com';
 
     notify.comment({
-      article: this,
+      business: this,
       currentUser: user,
       comment: comment.body
     });
@@ -140,10 +139,10 @@ ArticleSchema.methods = {
  * Statics
  */
 
-ArticleSchema.statics = {
+BusinessSchema.statics = {
 
   /**
-   * Find article by id
+   * Find business by id
    *
    * @param {ObjectId} id
    * @api private
@@ -157,7 +156,7 @@ ArticleSchema.statics = {
   },
 
   /**
-   * List articles
+   * List businesses
    *
    * @param {Object} options
    * @api private
@@ -176,4 +175,4 @@ ArticleSchema.statics = {
   }
 };
 
-mongoose.model('Article', ArticleSchema);
+mongoose.model('Business', BusinessSchema);

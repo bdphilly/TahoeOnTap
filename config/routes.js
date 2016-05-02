@@ -8,6 +8,7 @@
 // set the NODE_PATH to be ./app/controllers (package.json # scripts # start)
 
 const users = require('../app/controllers/users');
+const businesses = require('../app/controllers/businesses');
 const articles = require('../app/controllers/articles');
 const comments = require('../app/controllers/comments');
 const tags = require('../app/controllers/tags');

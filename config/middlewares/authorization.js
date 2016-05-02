@@ -17,7 +17,7 @@ exports.requiresLogin = function (req, res, next) {
 exports.user = {
   hasAuthorization: function (req, res, next) {
     if (req.profile.id != req.user.id) {
-      req.flash('warning', 'You are not authorized');
+      req.flash('info', 'You are not authorized');
       return res.redirect('/users/' + req.profile.id);
     }
     next();
@@ -25,7 +25,7 @@ exports.user = {
 
   ensureAdmin: function(req, res, next) {
     if (req.user.isAdmin) return next();
-    req.flash('info', 'You are not authorized');
+    req.flash('warning', 'You must be administrator.');
     res.redirect('/users');    
   }
 };
