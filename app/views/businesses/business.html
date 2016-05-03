@@ -1,0 +1,28 @@
+<div class="business">
+  <h3>
+    <a href="{{ '/businesses/' + business._id }}" title="{{ business.title }}">
+      {{ business.title }}
+    </a>
+  </h3>
+  <p>{{ business.body }}</p>
+
+  <span class="muted">{{ business.createdAt.toISOString()|date('M d, Y  h:i a') }}</span>
+
+  {% if (business.user) %}
+    &nbsp; - &nbsp;
+    <span>Author: </span>
+    <a href="{{ '/users/' + business.user._id }}">
+      {{ business.user.name || business.user.username }}
+    </a>
+  {% endif %}
+
+  {% if (business.tags) %}
+    &nbsp; - &nbsp;
+    <span>Tags: </span>
+    {% for tag in business.tags.split(',') %}
+      <i class="muted fa fa-tag"></i>&nbsp;
+      <a href="{{ '/tags/' + tag }}" class="tag">{{ tag }}</a>
+      &nbsp;&nbsp;
+    {% endfor %}
+  {% endif %}
+</div>

@@ -32,7 +32,7 @@ exports.index = wrap(function* (req, res) {
     page: page
   };
 
-  const business = yield Business.list(options);
+  const businesses = yield Business.list(options);
   const count = yield Business.count();
 
   res.render('businesses/index', {

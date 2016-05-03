@@ -56,23 +56,33 @@ module.exports = function (app, passport) {
   app.param('userId', users.load);
 
   // article routes
-  app.param('id', articles.load);
+  app.param('articleId', articles.load);
   app.get('/articles', articles.index);
   app.get('/articles/new', auth.requiresLogin, articles.new);
   app.post('/articles', auth.requiresLogin, articles.create);
-  app.get('/articles/:id', articles.show);
-  app.get('/articles/:id/edit', articleAuth, articles.edit);
-  app.put('/articles/:id', articleAuth, articles.update);
-  app.delete('/articles/:id', articleAuth, articles.destroy);
+  app.get('/articles/:articleId', articles.show);
+  app.get('/articles/:articleId/edit', articleAuth, articles.edit);
+  app.put('/articles/:articleId', articleAuth, articles.update);
+  app.delete('/articles/:articleId', articleAuth, articles.destroy);
+
+  // business routes
+  app.param(':businessId', businesses.load);
+  app.get('/businesses', businesses.index);
+  app.get('/businesses/new', auth.requiresLogin, businesses.new);
+  app.post('/businesses', auth.requiresLogin, businesses.create);
+  app.get('/businesses/:businessId', businesses.show);
+  // app.get('/articles/:id/edit', articleAuth, articles.edit);
+  // app.put('/articles/:id', articleAuth, articles.update);
+  // app.delete('/articles/:id', articleAuth, articles.destroy);  
 
   // home route
-  app.get('/', articles.index);
+  app.get('/', businesses.index);
 
   // comment routes
   app.param('commentId', comments.load);
-  app.post('/articles/:id/comments', auth.requiresLogin, comments.create);
-  app.get('/articles/:id/comments', auth.requiresLogin, comments.create);
-  app.delete('/articles/:id/comments/:commentId', commentAuth, comments.destroy);
+  app.post('/articles/:articleId/comments', auth.requiresLogin, comments.create);
+  app.get('/articles/:articleId/comments', auth.requiresLogin, comments.create);
+  app.delete('/articles/:articleId/comments/:commentId', commentAuth, comments.destroy);
 
   // tag routes
   app.get('/tags/:tag', tags.index);
