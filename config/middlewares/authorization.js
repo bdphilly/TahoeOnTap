@@ -44,6 +44,20 @@ exports.article = {
   }
 };
 
+/*
+ *  Business authorization routing middleware
+ */
+
+exports.business = {
+  hasAuthorization: function (req, res, next) {
+    if (req.business.user.id != req.user.id) {
+      req.flash('info', 'You are not authorized');
+      return res.redirect('/businesses/' + req.business.id);
+    }
+    next();
+  }
+};
+
 /**
  * Comment authorization routing middleware
  */

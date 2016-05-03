@@ -19,6 +19,7 @@ const auth = require('./middlewares/authorization');
  */
 
 const articleAuth = [auth.requiresLogin, auth.article.hasAuthorization];
+const businessAuth = [auth.requiresLogin, auth.business.hasAuthorization];
 const commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization];
 
 /**
@@ -66,14 +67,14 @@ module.exports = function (app, passport) {
   app.delete('/articles/:articleId', articleAuth, articles.destroy);
 
   // business routes
-  app.param(':businessId', businesses.load);
+  app.param('businessId', businesses.load);
   app.get('/businesses', businesses.index);
   app.get('/businesses/new', auth.requiresLogin, businesses.new);
   app.post('/businesses', auth.requiresLogin, businesses.create);
   app.get('/businesses/:businessId', businesses.show);
-  // app.get('/articles/:id/edit', articleAuth, articles.edit);
-  // app.put('/articles/:id', articleAuth, articles.update);
-  // app.delete('/articles/:id', articleAuth, articles.destroy);  
+  app.get('/businesses/:businessId/edit', businessAuth, businesses.edit);
+  app.put('/businesses/:businessId', businessAuth, businesses.update);
+  app.delete('/businesses/:businessId', businessAuth, businesses.destroy);  
 
   // home route
   app.get('/', businesses.index);
