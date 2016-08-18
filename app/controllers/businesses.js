@@ -60,13 +60,15 @@ exports.new = function (req, res){
  */
 
 exports.create = wrap(function* (req, res) {
+  console.log('=====>req.body', req.body);
   const business = new Business(only(req.body, 'title body tags'));
-  const images = req.files.image
-    ? [req.files.image]
-    : undefined;
+  console.log('req.files', req.files);
+  // const images = req.files
+  //   ? [req.files]
+  //   : undefined;
 
   business.user = req.user;
-  yield business.uploadAndSave(images);
+  yield business.uploadAndSave(req.files);
   req.flash('success', 'Successfully created business!');
   res.redirect('/businesses/' + business._id);
 });

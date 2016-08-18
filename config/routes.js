@@ -14,6 +14,19 @@ const comments = require('../app/controllers/comments');
 const tags = require('../app/controllers/tags');
 const auth = require('./middlewares/authorization');
 
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'});
+// const csrf = require('csurf');
+// const csrfProtection = csrf({ cookie: true })
+
+
+const testMe = function (req, res, next) {
+  console.log('........in the test!');
+  return next();
+};
+
+
+
 /**
  * Route middlewares
  */
@@ -59,8 +72,8 @@ module.exports = function (app, passport) {
   // article routes
   app.param('articleId', articles.load);
   app.get('/articles', articles.index);
-  app.get('/articles/new', auth.requiresLogin, articles.new);
-  app.post('/articles', auth.requiresLogin, articles.create);
+  app.get('/articles/new', auth.requiresLogin, testMe, articles.new);
+  app.post('/articles', auth.requiresLogin, testMe, articles.create);
   app.get('/articles/:articleId', articles.show);
   app.get('/articles/:articleId/edit', articleAuth, articles.edit);
   app.put('/articles/:articleId', articleAuth, articles.update);

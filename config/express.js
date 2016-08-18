@@ -75,7 +75,7 @@ module.exports = function (app, passport) {
   // bodyParser should be above methodOverride
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(multer().array('image', 1));
+  app.use(multer().array('image'));
   app.use(methodOverride(function (req) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
       // look in urlencoded POST bodies and delete it
@@ -107,7 +107,6 @@ module.exports = function (app, passport) {
 
   // should be declared after session and flash
   app.use(helpers(pkg.name));
-
   if (env !== 'test') {
     app.use(csrf());
 

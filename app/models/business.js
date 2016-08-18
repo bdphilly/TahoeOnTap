@@ -6,6 +6,7 @@
 
 const mongoose = require('mongoose');
 const notify = require('../mailer');
+const multer = require('multer');
 
 // const Imager = require('imager');
 // const config = require('../../config/config');
@@ -76,6 +77,9 @@ BusinessSchema.methods = {
   uploadAndSave: function (images) {
     const err = this.validateSync();
     if (err && err.toString()) throw new Error(err.toString());
+    
+
+    console.log('=======> images:', images);
     return this.save();
 
     /*
