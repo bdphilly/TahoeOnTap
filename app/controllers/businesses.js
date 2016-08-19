@@ -68,7 +68,8 @@ exports.create = wrap(function* (req, res) {
   //   : undefined;
 
   business.user = req.user;
-  yield business.uploadAndSave(req.files);
+  var test = yield business.uploadAndSave(req.files);
+  console.log('test', test);
   req.flash('success', 'Successfully created business!');
   res.redirect('/businesses/' + business._id);
 });

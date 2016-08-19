@@ -7,7 +7,16 @@
 const mongoose = require('mongoose');
 const notify = require('../mailer');
 const multer = require('multer');
+const AWS = require('aws-sdk');
 
+console.log(__dirname);
+
+// AWS.config.loadFromPath('../tahoeontap/config/s3_config.json');
+// AWS.config.key = process.env.IMAGER_S3_KEY;
+// AWS.config.secret = process.env.IMAGER_S3_SECRET;
+AWS.config.update({accessKeyId: 'AKIAJKG74V2F5CH3ZEQQ', secretAccessKey: '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'});
+
+const s3Bucket = new AWS.S3({params: {Bucket: 'myBucket'}});
 // const Imager = require('imager');
 // const config = require('../../config/config');
 // const imagerConfig = require(config.root + '/config/imager.js');
@@ -78,9 +87,38 @@ BusinessSchema.methods = {
     const err = this.validateSync();
     if (err && err.toString()) throw new Error(err.toString());
     
+    console.log('=======> buffer:', images[0].buffer);
 
-    console.log('=======> images:', images);
-    return this.save();
+
+        // buf = new Buffer(req.body.imageBinary.replace(/^data:image\/\w+;base64,/, ""),'base64')
+        var data = {
+          Key: 'image', 
+          Body: images[0].buffer,
+          ContentEncoding: 'base64',
+          ContentType: 'image/jpeg'
+        };
+
+        var that = this;
+        var promise = new Promise(function(resolve, reject) {
+          console.log('in the promise!');
+
+            return s3Bucket.putObject(data, function(err, data){
+                if (err) { 
+                  console.log(err);
+                  console.log('Error uploading data: ', data);
+                  resolve(that.save());
+                } else {
+                  console.log('succesfully uploaded the image!');
+                  resolve(that.save());
+                }
+            });
+          
+          resolve('happy days');
+          reject('uh oh');
+        });
+
+        return promise;
+
 
     /*
     if (images && !images.length) return this.save();
