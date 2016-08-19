@@ -6,17 +6,7 @@
 
 const mongoose = require('mongoose');
 const notify = require('../mailer');
-const multer = require('multer');
-const AWS = require('aws-sdk');
-
-console.log(__dirname);
-
-// AWS.config.loadFromPath('../tahoeontap/config/s3_config.json');
-// AWS.config.key = process.env.IMAGER_S3_KEY;
-// AWS.config.secret = process.env.IMAGER_S3_SECRET;
-AWS.config.update({accessKeyId: 'AKIAJR6NFJ65EREUPT4A', secretAccessKey: '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'});
-
-const s3Bucket = new AWS.S3({params: {Bucket: 'tahoeontap'}});
+const EVENT_TYPES = require('../../../tahoeontap/config/constants').EVENT_TYPES;
 // const Imager = require('imager');
 // const config = require('../../config/config');
 // const imagerConfig = require(config.root + '/config/imager.js');
@@ -27,23 +17,20 @@ const getTags = tags => tags.join(',');
 const setTags = tags => tags.split(',');
 
 /**
- * Business Schema
+ * Article Schema
  */
 
-const BusinessSchema = new Schema({
-  name: { type : String, default : '', trim : true },
+const EventSchema = new Schema({
+  title: { type : String, default : '', trim : true },
   description: { type : String, default : '', trim : true },
   user: { type : Schema.ObjectId, ref : 'User' },
-  comments: [{
-    description: { type : String, default : '' },
-    user: { type : Schema.ObjectId, ref : 'User' },
-    createdAt: { type : Date, default : Date.now }
-  }],
+  type: { type : String, default : EVENT_TYPES.RECURRING },
   tags: { type: [], get: getTags, set: setTags },
   image: {
     cdnUri: String,
     files: []
   },
+  date: { type: Date, default : null },
   createdAt  : { type : Date, default : Date.now }
 });
 
@@ -51,21 +38,21 @@ const BusinessSchema = new Schema({
  * Validations
  */
 
-BusinessSchema.path('name').required(true, 'Business name cannot be blank');
-BusinessSchema.path('description').required(true, 'Business description cannot be blank');
+EventSchema.path('title').required(true, 'Article title cannot be blank');
+EventSchema.path('description').required(true, 'Event description cannot be blank');
 
 /**
  * Pre-remove hook
  */
 
-BusinessSchema.pre('remove', function (next) {
+EventSchema.pre('remove', function (next) {
   // const imager = new Imager(imagerConfig, 'S3');
   // const files = this.image.files;
 
   // if there are files associated with the item, remove from the cloud too
   // imager.remove(files, function (err) {
   //   if (err) return next(err);
-  // }, 'business');
+  // }, 'article');
 
   next();
 });
@@ -74,64 +61,33 @@ BusinessSchema.pre('remove', function (next) {
  * Methods
  */
 
-BusinessSchema.methods = {
+EventSchema.methods = {
 
   /**
-   * Save business and upload image
+   * Save article and upload image
    *
    * @param {Object} images
    * @api private
    */
 
   uploadAndSave: function (images) {
+    // console.log('images: ', images);
     const err = this.validateSync();
     if (err && err.toString()) throw new Error(err.toString());
+    return this.save();
+
+    // console.log('images length', images.length);
+    // if (images && !images.length) return this.save();
+    // const imager = new Imager(imagerConfig, 'S3');
+    // console.log('in the imager', imager);
+    // imager.upload(images, function (err, cdnUri, files) {
+    //   if (err) return cb(err);
+    //   if (files.length) {
+    //     self.image = { cdnUri : cdnUri, files : files };
+    //   }
+    //   self.save(cb);
+    // }, 'article');
     
-    console.log('=======> buffer:', images[0].buffer);
-
-
-        // buf = new Buffer(req.body.imageBinary.replace(/^data:image\/\w+;base64,/, ""),'base64')
-        var data = {
-          Key: 'image100', 
-          Body: images[0].buffer,
-          ContentEncoding: 'base64',
-          ContentType: 'image/jpeg'
-        };
-
-        var that = this;
-        var promise = new Promise(function(resolve, reject) {
-          console.log('in the promise!');
-
-            return s3Bucket.putObject(data, function(err, data){
-                if (err) { 
-                  console.log(err);
-                  console.log('Error uploading data: ', data);
-                  resolve(that.save());
-                } else {
-                  console.log('succesfully uploaded the image!');
-                  resolve(that.save());
-                }
-            });
-          
-          resolve('happy days');
-          reject('uh oh');
-        });
-
-        return promise;
-
-
-    /*
-    if (images && !images.length) return this.save();
-    const imager = new Imager(imagerConfig, 'S3');
-
-    imager.upload(images, function (err, cdnUri, files) {
-      if (err) return cb(err);
-      if (files.length) {
-        self.image = { cdnUri : cdnUri, files : files };
-      }
-      self.save(cb);
-    }, 'business');
-    */
   },
 
   /**
@@ -144,16 +100,16 @@ BusinessSchema.methods = {
 
   addComment: function (user, comment) {
     this.comments.push({
-      description: comment.description,
+      body: comment.body,
       user: user._id
     });
 
     if (!this.user.email) this.user.email = 'email@product.com';
 
     notify.comment({
-      business: this,
+      article: this,
       currentUser: user,
-      comment: comment.description
+      comment: comment.body
     });
 
     return this.save();
@@ -181,10 +137,10 @@ BusinessSchema.methods = {
  * Statics
  */
 
-BusinessSchema.statics = {
+EventSchema.statics = {
 
   /**
-   * Find business by id
+   * Find article by id
    *
    * @param {ObjectId} id
    * @api private
@@ -198,7 +154,7 @@ BusinessSchema.statics = {
   },
 
   /**
-   * List businesses
+   * List articles
    *
    * @param {Object} options
    * @api private
@@ -217,4 +173,4 @@ BusinessSchema.statics = {
   }
 };
 
-mongoose.model('Business', BusinessSchema);
+mongoose.model('Event', EventSchema);

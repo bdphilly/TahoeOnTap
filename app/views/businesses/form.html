@@ -23,9 +23,9 @@
         {% endif %}
 
         <div class="form-group">
-          <label for="title" class="col-sm-2 control-label">Title</label>
+          <label for="name" class="col-sm-2 control-label">Name</label>
           <div class="col-sm-10">
-            <input type="text" name="title" value="{{ business.title }}" placeholder="Enter the title" class="form-control" id="title">
+            <input type="text" name="name" value="{{ business.name }}" placeholder="Enter the name" class="form-control" id="name">
           </div>
         </div>
 
@@ -39,7 +39,7 @@
         <div class="form-group">
           <label for="desc" class="col-sm-2 control-label">Body</label>
           <div class="col-sm-10">
-            <textarea rows="5" name="body" placeholder="Enter the business description" id="desc" cols="30" rows="10" class="form-control">{{ business.body }}</textarea>
+            <textarea rows="5" name="description" placeholder="Enter the business description" id="desc" cols="30" rows="10" class="form-control">{{ business.description }}</textarea>
           </div>
         </div>
 

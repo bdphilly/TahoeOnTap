@@ -61,7 +61,7 @@ exports.new = function (req, res){
 
 exports.create = wrap(function* (req, res) {
   console.log('=====>req.body', req.body);
-  const business = new Business(only(req.body, 'title body tags'));
+  const business = new Business(only(req.body, 'name description tags'));
   console.log('req.files', req.files);
   // const images = req.files
   //   ? [req.files]
@@ -80,7 +80,7 @@ exports.create = wrap(function* (req, res) {
 
 exports.edit = function (req, res) {
   res.render('businesses/edit', {
-    title: 'Edit ' + req.business.title,
+    name: 'Edit ' + req.business.name,
     business: req.business
   });
 };
@@ -95,7 +95,7 @@ exports.update = wrap(function* (req, res){
     ? [req.files.image]
     : undefined;
 
-  assign(business, only(req.body, 'title body tags'));
+  assign(business, only(req.body, 'name description tags'));
   yield business.uploadAndSave(images);
   res.redirect('/businesses/' + business._id);
 });
@@ -106,7 +106,7 @@ exports.update = wrap(function* (req, res){
 
 exports.show = function (req, res){
   res.render('businesses/show', {
-    title: req.business.title,
+    name: req.business.name,
     business: req.business
   });
 };
